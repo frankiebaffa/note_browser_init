@@ -27,6 +27,13 @@ class NestPath:
 
         self.nest.pop(len(self.nest) - 1)
 
+    def get_last(self) -> str:
+        """
+        Retrieves the final element from the nest
+        """
+
+        return self.nest[len(self.nest) - 1]
+
 class Context:
     """
     The context of the program
@@ -78,13 +85,18 @@ class Program:
         ]
 
     @staticmethod
+    def get_description_md() -> str:
+        return "description.md"
+
+    @staticmethod
     def default_ignore_files() -> List[str]:
         """
         The default files to ignore
         """
 
         return [
-            "index.md"
+            "index.md",
+            Program.get_description_md()
         ]
 
     @staticmethod
@@ -119,17 +131,13 @@ class Program:
         if nest is None:
             nest = NestPath()
         nest.add(root)
-        has_file = False
-        has_dir = False
-        file_output = ""
-        dir_output = ""
         for filename in os.listdir(root):
             abspath = os.path.join(root, filename)
             if os.path.isfile(abspath):
                 if os.path.splitext(filename)[1] != ".md":
                     continue
-                if not has_file:
-                    has_file = True
+                if filename == Program.get_description_md():
+                    continue
                 gen_start = "<!--AUTO GENERATED-->"
                 gen_end = "<!--/AUTO GENERATED-->"
                 the_rest: str = None
@@ -183,6 +191,22 @@ class Program:
         return
 
     @staticmethod
+    def chk_get_desc(path: str) -> str:
+        """
+        Checks if the description file exists along the current path and
+        retrieves the contents
+        """
+
+        description_file = os.path.join(path, Program.get_description_md())
+        if os.path.isfile(description_file):
+            with open(description_file, "r") as desc:
+                desc_content = desc.read().strip()
+                desc.close()
+                return f"# Description\n\n{desc_content}"
+        else:
+            return None
+
+    @staticmethod
     def create_index_from_dir(root: str):
         """
         Recursively checks internal directories and generates index.md files
@@ -192,6 +216,7 @@ class Program:
         has_dir = False
         file_output = ""
         dir_output = ""
+        desc_output = ""
         for filename in os.listdir(root):
             abspath = os.path.join(root, filename)
             relpath = os.path.join("", filename)
@@ -222,7 +247,11 @@ class Program:
                 continue
             else:
                 continue
-        output = "# ToC\n"
+        desc_output = Program.chk_get_desc(root)
+        output = ""
+        if desc_output:
+            output = f"{desc_output}\n\n"
+        output = f"{output}# ToC\n"
         if dir_output:
             output = f"{output}\n{dir_output}\n"
         if file_output:

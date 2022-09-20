@@ -172,7 +172,6 @@ class Program:
                 with open(abspath, "w") as file:
                     file.truncate(0)
                     file.write(new_content)
-                print("Generated nav for " + abspath)
             elif os.path.isdir(abspath):
                 if abspath in Program.default_ignore_dirs():
                     continue

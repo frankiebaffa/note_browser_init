@@ -60,7 +60,7 @@ class Program:
     @staticmethod
     def to_title_case(snake: str) -> str:
         """
-        Transforms a camel-cased string into a title-cased string
+        Transforms a lower-snake-cased string into a title-cased string
         """
 
         return snake.replace("_", " ").title()

@@ -47,13 +47,27 @@ file URLs` and toggle it to ON.
 
 ## Index Generation<span id="root-index-generation"></span>
 
-The file located [here](./note_browser_init.py) will generate all of the
-necessary `index.md` files throughout this repository. Re-running is only
-necessary when new files are added.
+The file located [here](./note_browser_init.py) will generate `index.md` files
+inside every directory containing markdown files. This `index.md` file will
+contain links for all nested directories and files. It will also generate a
+*Description* section if the directory contains a `description.md` file. It
+generates a document header on each `.md` file containing a fully-linked path
+from the root to the document as well as the document name.
+
+**Before running script**
+
+[![Markdown viewer no navigation][no_nav]][no_nav]
+
+**After running script**
+
+[![Markdown viewer with navigation][nav]][nav]
 
 ## Example<span id="root-example"></span>
 
 ```bash
-./note_browser_init.py --path /home/username/notes_directory
+cd "$YOUR_NOTES_DIR"
+/path/to/./note_browser_init.py --path "$PWD"
 ```
 
+[no_nav]: readme/note_browser_no_nav.png
+[nav]: readme/note_browser_nav.png

@@ -217,7 +217,10 @@ class Program:
         file_output = ""
         dir_output = ""
         desc_output = ""
-        for filename in os.listdir(root):
+        # sort files in directory
+        list_dir: List[str] = os.listdir(root)
+        list_dir.sort()
+        for filename in list_dir:
             abspath = os.path.join(root, filename)
             relpath = os.path.join("", filename)
             if os.path.isfile(abspath):
